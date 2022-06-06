@@ -1,25 +1,64 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Mainnet, DAppProvider, useSendTransaction, useEthers, Rinkeby } from '@usedapp/core'
+import { getDefaultProvider } from 'ethers'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const config = {
+  readOnlyChainId: Mainnet.chainId,
+  readOnlyUrls: {
+    [Mainnet.chainId]: getDefaultProvider('mainnet'),
+    [Rinkeby.chainId]: getDefaultProvider('rinkeby'),
+  },
 }
 
-export default App;
+ReactDOM.render(
+  <DAppProvider config={config}>
+    <App />
+  </DAppProvider>,
+  document.getElementById('root')
+)
+
+export function App() {
+  const { chainId, switchNetwork, activateBrowserWallet, account } = useEthers()
+  const { sendTransaction, state } = useSendTransaction()
+
+  const status = state.status
+  const address = '0xe13610d0a3e4303c70791773C5DF8Bb16de185d1'
+
+  const send = () => {
+    void sendTransaction({ to: address, value: 1 })
+  }
+
+  const WalletContent = () => (
+    <>
+      <div>Current chain: {chainId}</div>
+      <div>
+        {
+          <button onClick={() => switchNetwork(Mainnet.chainId)} disabled={chainId === Mainnet.chainId}>
+            Switch to Mainnet
+          </button>
+        }{' '}
+        {
+          <button onClick={() => switchNetwork(Rinkeby.chainId)} disabled={chainId === Rinkeby.chainId}>
+            Switch to Rinkeby
+          </button>
+        }
+      </div>
+      <hr />
+      <div>
+        <div>Account: {account ?? 'not connected'}</div>
+        <button onClick={() => send()}>Send ether</button>
+        <p>Status: {status}</p>
+        {state.errorMessage && <p>Error: {state.errorMessage}</p>}
+      </div>
+    </>
+  )
+
+  return (
+    <div>
+      {!account && <button onClick={() => activateBrowserWallet()}>Connect</button>}
+      {account ? <WalletContent /> : <p>Connect to wallet to interact with the example.</p>}
+    </div>
+  )
+}
+export default App
