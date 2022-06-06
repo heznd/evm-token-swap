@@ -1,22 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { Mainnet, DAppProvider, useSendTransaction, useEthers, Rinkeby } from '@usedapp/core'
-import { getDefaultProvider } from 'ethers'
-
-const config = {
-  readOnlyChainId: Mainnet.chainId,
-  readOnlyUrls: {
-    [Mainnet.chainId]: getDefaultProvider('mainnet'),
-    [Rinkeby.chainId]: getDefaultProvider('rinkeby'),
-  },
-}
-
-ReactDOM.render(
-  <DAppProvider config={config}>
-    <App />
-  </DAppProvider>,
-  document.getElementById('root')
-)
+import { Mainnet, Rinkeby, useEthers, useSendTransaction } from '@usedapp/core';
+import React from 'react';
 
 export function App() {
   const { chainId, switchNetwork, activateBrowserWallet, account } = useEthers()

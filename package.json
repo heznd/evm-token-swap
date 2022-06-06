@@ -5,17 +5,19 @@
   "dependencies": {
     "@ethersproject/contracts": "^5.6.2",
     "@ethersproject/providers": "^5.6.8",
+    "@metamask/detect-provider": "^1.2.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@usedapp/core": "^1.0.7",
+    "ethers": "^5.6.8",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=3006 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
